@@ -1,8 +1,3 @@
-const rl = require('readline').createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
-
 function initBoard() {
     let board = [];
     for (let i = 0; i < 3; i++) {
@@ -92,25 +87,21 @@ function createPlayer(name, token) {
         return false;
     }
 
-    function recursiveRead() {
-        // TODO: Stop player from playing in already filled spot
-        // TODO: Input Validation
-        console.log(`It is ${currentPlayer.name}'s turn...`);
-        rl.question(`Pick a position (x,y): `, (move) => {
-            move = move.split(',').map(i => Number(i));
-            currentCell = board.getCell(move[0], move[1]);
-            board.placeToken(currentCell, currentPlayer);
-            if (checkWin(board)) {
-                console.log(`${currentPlayer.name} won the game!`);
-                return rl.close();
-            } else if (gameOver === true) {
-                console.log("it's a damn draw lol!");
-                return rl.close();
-            }
-            board.printBoard();
-            if (currentPlayer) currentPlayer = currentPlayer === p1 ? p2 : p1;
-            recursiveRead();
-        })
+    // TODO: Stop player from playing in already filled spot
+    // TODO: Input Validation
+    while (!gameOver) {
+        alert(`It is ${currentPlayer.name}'s turn...`);
+        move = prompt("pick a cell to place your marker(x,y): ");
+        move = move.split(',').map(i => Number(i));
+        currentCell = board.getCell(move[0], move[1]);
+        board.placeToken(currentCell, currentPlayer);
+        if (checkWin(board)) {
+            console.log(`${currentPlayer.name} won the game!`);
+        } else if (gameOver === true) {
+            console.log("it's a damn draw lol!");
+        }
+        board.printBoard();
+        if (currentPlayer) currentPlayer = currentPlayer === p1 ? p2 : p1;
     }
-    recursiveRead();
+
 })();
