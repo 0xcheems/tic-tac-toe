@@ -41,13 +41,54 @@ function createPlayer(name, token) {
     return { name, token }
 }
 
+function renderDOM() {
+    let isMoveValid = false;
+    const domBoardArr = [];
+    const domRows = document.querySelectorAll('.row');
+    for (let i = 0; i < 3; i++) {
+        const domCells = domRows[i].querySelectorAll('.row div');
+        const rowArr = []
+
+        for (let j = 0; j < 3; j++) {
+            rowArr.push(domCells[j]);
+        }
+
+        domBoardArr.push(rowArr);
+    }
+
+    const setMsg = (text) => {
+        let msgBox = document.querySelector('.message');
+        msgBox.textContent = text;
+    }
+
+    const fillCell = (cell, player) => {
+        if (!cell.textContent) {
+            isMoveValid = true;
+            cell.textContent = player.token;
+        } else isMoveValid = false;
+    }
+
+    const findCell = (domCell) => {
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                if (domBoardArr[i][j] === domCell) return [i, j];
+            }
+        }
+    }
+
+    const getMoveValidity = () => isMoveValid;
+
+    return { setMsg, fillCell, getMoveValidity, findCell };
+}
+
 (function gameController() {
     const p1 = createPlayer("player 1", "x");
     const p2 = createPlayer("player 2", "o");
     let gameOver = false;
     let board = initBoard();
+    let dom = renderDOM();
     let currentPlayer = p1;
-    let currentCell = null;
+    dom.setMsg(`It is ${currentPlayer.name}'s turn...`);
 
     const checkWin = (board) => {
         gameOver = true;
@@ -89,43 +130,25 @@ function createPlayer(name, token) {
         return false;
     }
 
-    const validateInput = (input) => {
-        input = input.split(',').map(i => Number(i));
-        if (input.length !== 2) return false;
-        for (let i = 0; i < input.length; i++) {
-            if (typeof input[i] !== 'number') return false;
-            else if (input[i] > 2 || input[i] < 0) return false;
-        }
-        return true;
-    }
+    const domCells = document.querySelectorAll('.board-container .row div');
+    domCells.forEach(cell => cell.addEventListener('click', () => {
 
-    // TODO: Stop player from playing in already filled spot DONE
-    // TODO: Input Validation
-    while (!gameOver) { // game loop
-        alert(`It is ${currentPlayer.name}'s turn...`);
-        move = prompt("pick a cell to place your marker(x,y): ");
+        if (!checkWin(board) && !gameOver) {
+            dom.fillCell(cell, currentPlayer, board);
+            let cellPos = dom.findCell(cell);
+            board.placeToken(board.getCell(cellPos[0], cellPos[1]), currentPlayer);
+            if (dom.getMoveValidity()) {
+                if (checkWin(board)) {
+                    dom.setMsg(`${currentPlayer.name} won the game!`);
+                } else if (gameOver) {
+                    dom.setMsg("it's a damn draw lol!");
+                } else {
+                    if (currentPlayer) currentPlayer = currentPlayer === p1 ? p2 : p1;
+                    dom.setMsg(`It is ${currentPlayer.name}'s turn...`);
+                }
 
-        if (!validateInput(move)) {
-            alert("invalid input, enter a pair of numbers \n(x,y : 0 <= x/y <= 2): ");
-            continue;
-        }
-
-        move = move.split(',').map(i => Number(i));
-        currentCell = board.getCell(move[0], move[1]);
-        let placement = board.placeToken(currentCell, currentPlayer);
-
-        if (!placement) {
-            alert("you can't play there pal...");
-            continue;
-        }
-
-        if (checkWin(board)) {
-            console.log(`${currentPlayer.name} won the game!`);
-        } else if (gameOver === true) {
-            console.log("it's a damn draw lol!");
+            } else dom.setMsg(`you can't play there...\nit is ${currentPlayer.name}'s turn`);
         }
         board.printBoard();
-        if (currentPlayer) currentPlayer = currentPlayer === p1 ? p2 : p1;
-    }
-
+    }));
 })();
