@@ -1,60 +1,64 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
     <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="styles.css">
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="styles.css" />
         <script src="script.js" defer></script>
         <title>tic tac toe</title>
     </head>
     <body>
         <main>
-        <h1>tic tac toe</h1>
+            <h1>tic tac toe</h1>
 
-        <div class="board-container">
-            <div class="row">
-                <div class="cell"></div>
-                <div class="cell"></div>
-                <div class="cell"></div>
-            </div>
-
-            <div class="row">
-                <div class="cell"></div>
-                <div class="cell"></div>
-                <div class="cell"></div>
-            </div>
-
-            <div class="row">
-                <div class="cell"></div>
-                <div class="cell"></div>
-                <div class="cell"></div>
-            </div>
-        </div>
-
-        <div class="player-form">
-            <div>
-                <label>Enter player 1's name (marker: x): </label>
-                <div>
-                    <input type="text" />
-                    <button class="submit-name">enter</button>
+            <div class="board-container">
+                <div class="row">
+                    <div class="cell"></div>
+                    <div class="cell"></div>
+                    <div class="cell"></div>
                 </div>
-                <div class="display-name">stephen</div>
-            </div>
-            <div>
-                <label>Enter player 2's name (marker: o): </label>
-                <div>
-                    <input type="text" />
-                    <button class="submit-name">enter</button>
+
+                <div class="row">
+                    <div class="cell"></div>
+                    <div class="cell"></div>
+                    <div class="cell"></div>
                 </div>
-                <div class="display-name">z</div>
+
+                <div class="row">
+                    <div class="cell"></div>
+                    <div class="cell"></div>
+                    <div class="cell"></div>
+                </div>
             </div>
-        </div>
 
-        <div class="message">welcome!</div>
+            <div class="player-form">
+                <div>
+                    <label>Enter player 1's name (marker: x): </label>
+                    <div>
+                        <input type="text" for="p1name" />
+                        <button class="submit-name" id="p1name" name="p1name">
+                            enter
+                        </button>
+                    </div>
+                    <div class="display-name">stephen</div>
+                </div>
+                <div>
+                    <label>Enter player 2's name (marker: o): </label>
+                    <div>
+                        <input type="text" for="p2name" />
+                        <button class="submit-name" id="p2name" name="p2name">
+                            enter
+                        </button>
+                    </div>
+                    <div class="display-name">z</div>
+                </div>
+            </div>
 
-        <div class="start-restart-container">
-            <button class="start-restart">start</button>
-        </div>
+            <div class="message">welcome!</div>
+
+            <div class="start-restart-container">
+                <button class="start-restart">start</button>
+            </div>
         </main>
     </body>
 </html>
