@@ -107,6 +107,7 @@ const gameController = (() => {
 
 // TODO: Add reset logic to go back to the main menu
 // TODO: Add a message that pops up every round
+// TODO: Stop user from starting if both name fields are not filled
 
 (function displayController() {
   const gc = gameController;
@@ -120,18 +121,23 @@ const gameController = (() => {
   );
 
   const startGame = () => {
-    console.log(p1Field.value);
-    gc.p1.setName(p1Field.value);
-    gc.p2.setName(p2Field.value);
-    gc.setCurrentPlayer(gc.p1);
-    console.log(gc.p1, gc.p2);
-    mainMenu.style.display = "none";
+    if (p1Field.value && p2Field.value) {
+      gc.p1.setName(p1Field.value);
+      gc.p2.setName(p2Field.value);
+      gc.setCurrentPlayer(gc.p1);
+      console.log("player 1:", gc.p1, "player 2:", gc.p2);
+      mainMenu.style.display = "none";
+    }
   };
 
   const resetBoardUI = () => {
     for (cell in boardUIArray) {
       cell.textContent = "";
     }
+  };
+
+  const showWinner = () => {
+    // show a ui overlay for the winner
   };
 
   const handleCellClick = (event, token) => {
