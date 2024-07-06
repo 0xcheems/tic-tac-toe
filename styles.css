@@ -51,7 +51,7 @@ h1 {
     left: 0;
     width: 100%;
     height: 100%;
-    backdrop-filter: blur(100px);
+    backdrop-filter: blur(200px);
 }
 
 .welcome-overlay > div > div {

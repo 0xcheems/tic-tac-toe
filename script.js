@@ -1,5 +1,13 @@
-function createPlayer(name, token) {
-  return { name, token };
+function createPlayer(token) {
+  let name = "";
+
+  const setName = (newName) => {
+    name = newName;
+  };
+
+  const getName = () => name;
+
+  return { getName, setName, token };
 }
 
 function createBoard() {
@@ -32,7 +40,13 @@ function createBoard() {
   return { fillCell, getState, resetState, showBoard };
 }
 
-(function gameController() {
+const gameController = (() => {
+  const board = createBoard();
+  const p1 = createPlayer("x");
+  const p2 = createPlayer("o");
+  let currentPlayer;
+  let roundCount = 1;
+
   const checkWin = (boardState) => {
     const winState = [
       [0, 1, 2],
@@ -65,29 +79,90 @@ function createBoard() {
     if (!boardState[position]) return true;
   };
 
-  const board = createBoard();
-  const p1 = createPlayer("p1", "x");
-  const p2 = createPlayer("p2", "o");
-  let currentPlayer = p1;
-  let cell;
+  const getCurrentPlayer = () => currentPlayer;
 
-  while (true) {
-    cell = Math.floor(Math.random() * 9);
+  const setCurrentPlayer = (player) => {
+    currentPlayer = player;
+  };
 
-    if (checkMoveValidity(board.getState(), cell)) {
-      board.fillCell(cell, currentPlayer.token);
-    } else continue;
+  const getRoundCount = () => roundCount;
 
-    board.showBoard();
-    if (checkWin(board.getState())) {
-      console.log(`${currentPlayer.name} wins`);
-      break;
+  const incrRoundCount = () => {
+    roundCount++;
+  };
+
+  return {
+    checkWin,
+    checkGameOver,
+    checkMoveValidity,
+    board,
+    p1,
+    p2,
+    getCurrentPlayer,
+    setCurrentPlayer,
+    getRoundCount,
+    incrRoundCount,
+  };
+})();
+
+// TODO: Add reset logic to go back to the main menu
+// TODO: Add a message that pops up every round
+
+(function displayController() {
+  const gc = gameController;
+  const mainMenu = document.querySelector(".welcome-overlay");
+  const startButton = document.querySelector(".welcome-overlay .start-game");
+  const p1Field = document.querySelector("input#p1");
+  const p2Field = document.querySelector("input#p2");
+  const boardUI = document.querySelector(".board-container");
+  const boardUIArray = Array.from(
+    document.querySelectorAll(".board-container > div"),
+  );
+
+  const startGame = () => {
+    console.log(p1Field.value);
+    gc.p1.setName(p1Field.value);
+    gc.p2.setName(p2Field.value);
+    gc.setCurrentPlayer(gc.p1);
+    console.log(gc.p1, gc.p2);
+    mainMenu.style.display = "none";
+  };
+
+  const resetBoardUI = () => {
+    for (cell in boardUIArray) {
+      cell.textContent = "";
+    }
+  };
+
+  const handleCellClick = (event, token) => {
+    const cell = Number.parseInt(event.target.id);
+    const isMoveValid =
+      gc.checkMoveValidity(gc.board.getState(), cell) &&
+      !event.target.textContent;
+
+    if (
+      isMoveValid &&
+      !gc.checkWin(gc.board.getState()) &&
+      !gc.checkGameOver(gc.board.getState())
+    ) {
+      gc.board.fillCell(cell, token);
+      event.target.textContent = token;
     }
 
-    if (checkGameOver(board.getState())) {
+    if (gc.checkWin(gc.board.getState())) {
+      console.log(`${gc.getCurrentPlayer().getName()} wins`);
+    } else if (gc.checkGameOver(gc.board.getState())) {
       console.log("it's a tie");
-      break;
+    } else if (isMoveValid) {
+      gc.setCurrentPlayer(gc.getCurrentPlayer() === gc.p1 ? gc.p2 : gc.p1);
     }
-    currentPlayer = currentPlayer === p1 ? p2 : p1;
+  };
+
+  startButton.addEventListener("click", startGame);
+
+  for (const cell of boardUIArray) {
+    cell.addEventListener("click", (event) =>
+      handleCellClick(event, gc.getCurrentPlayer().token),
+    );
   }
 })();
