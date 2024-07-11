@@ -41,6 +41,46 @@ h1 {
     cursor: pointer;
 }
 
+.game-info {
+    font-size: min(5vw, 3.2rem);
+    display: flex;
+    justify-content: center;
+    gap: 10vw;
+    padding: 50px;
+}
+
+.game-info > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.game-info span:nth-child(2) {
+    background-color: rgba(255, 255, 255, 0.6);
+    color: #000;
+    padding: 0 20px;
+}
+
+.restart-round-button-container {
+    padding: 30px 0;
+    display: flex;
+    justify-content: center;
+}
+
+.restart-round-button {
+    width: 250px;
+    height: 60px;
+    font-size: 2.4rem;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.6);
+    box-shadow: 8px 8px rgba(255, 255, 255, 0.5);
+}
+
+.restart-round-button:hover {
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
 .welcome-overlay {
     position: absolute;
     display: flex;
@@ -51,7 +91,7 @@ h1 {
     left: 0;
     width: 100%;
     height: 100%;
-    backdrop-filter: blur(200px);
+    background: #121212;
 }
 
 .welcome-overlay > div > div {
@@ -80,6 +120,49 @@ h1 {
 }
 
 .welcome-overlay button:hover {
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.result-dialog {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(10px);
+}
+
+.result-dialog-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgb(33, 33, 33);
+}
+
+.result-dialog-container > div {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+}
+
+.result-dialog button {
+    width: 20vw;
+    margin: 40px 0;
+    height: 60px;
+    font-size: 2.4rem;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.6);
+    box-shadow: 8px 8px rgba(255, 255, 255, 0.5);
+}
+
+.result-dialog button:hover {
     cursor: pointer;
     background-color: rgba(255, 255, 255, 0.3);
 }

@@ -1,5 +1,6 @@
 function createPlayer(token) {
   let name = "";
+  let score = 0;
 
   const setName = (newName) => {
     name = newName;
@@ -7,7 +8,17 @@ function createPlayer(token) {
 
   const getName = () => name;
 
-  return { getName, setName, token };
+  const getScore = () => score;
+
+  const incrScore = () => {
+    score++;
+  };
+
+  const resetScore = () => {
+    score = 0;
+  };
+
+  return { getName, setName, token, getScore, incrScore, resetScore };
 }
 
 function createBoard() {
@@ -91,6 +102,28 @@ const gameController = (() => {
     roundCount++;
   };
 
+  const resetRoundCount = () => {
+    roundCount = 1;
+  };
+
+  // TODO: remember to add something for the individual scores and the round count
+  const resetGame = () => {
+    currentPlayer = null;
+    board.resetState();
+    p1.setName(null);
+    p2.setName(null);
+  };
+
+  const resetRound = () => {
+    currentPlayer = currentPlayer === p1 ? p2 : p1;
+    board.resetState();
+  };
+
+  const resetPlayerScores = () => {
+    p1.resetScore();
+    p2.resetScore();
+  };
+
   return {
     checkWin,
     checkGameOver,
@@ -102,6 +135,10 @@ const gameController = (() => {
     setCurrentPlayer,
     getRoundCount,
     incrRoundCount,
+    resetRoundCount,
+    resetGame,
+    resetRound,
+    resetPlayerScores,
   };
 })();
 
@@ -116,6 +153,16 @@ const gameController = (() => {
   const p1Field = document.querySelector("input#p1");
   const p2Field = document.querySelector("input#p2");
   const boardUI = document.querySelector(".board-container");
+  const resultDialog = document.querySelector(".result-dialog");
+  const resultMsg = document.querySelector(".result-text");
+  const quitGameButton = document.querySelector(".quit-button");
+  const nextRoundButton = document.querySelector(".next-round-button");
+  const restartRoundButton = document.querySelector(".restart-round-button");
+  const p1Score = document.querySelector(".p1-scoreboard span:nth-child(2)");
+  const p2Score = document.querySelector(".p2-scoreboard span:nth-child(2)");
+  const p1Name = document.querySelector(".p1-scoreboard span:first-child");
+  const p2Name = document.querySelector(".p2-scoreboard span:first-child");
+  const roundDisplay = document.querySelector(".round-count span:nth-child(2)");
   const boardUIArray = Array.from(
     document.querySelectorAll(".board-container > div"),
   );
@@ -125,19 +172,67 @@ const gameController = (() => {
       gc.p1.setName(p1Field.value);
       gc.p2.setName(p2Field.value);
       gc.setCurrentPlayer(gc.p1);
+      updateScoreboard();
       console.log("player 1:", gc.p1, "player 2:", gc.p2);
       mainMenu.style.display = "none";
     }
   };
 
+  const updateScoreboard = () => {
+    p1Name.textContent = gc.p1.getName();
+    p1Score.textContent = gc.p1.getScore();
+    p2Name.textContent = gc.p2.getName();
+    p2Score.textContent = gc.p2.getScore();
+    roundDisplay.textContent = gc.getRoundCount();
+  };
+
   const resetBoardUI = () => {
-    for (cell in boardUIArray) {
+    for (cell of boardUIArray) {
       cell.textContent = "";
     }
   };
 
-  const showWinner = () => {
-    // show a ui overlay for the winner
+  const resetPlayerFields = () => {
+    p1Field.value = "";
+    p2Field.value = "";
+  };
+
+  // create functions to show the main menu, remove the result overlay, reset the player names
+  // create a function to keep scores and create a function to reset the scores
+
+  const showMainMenu = () => {
+    mainMenu.style.display = "flex";
+  };
+
+  const removeResult = () => {
+    resultDialog.style.display = "none";
+  };
+
+  const startNextRound = () => {
+    gc.resetRound();
+    resetBoardUI();
+    removeResult();
+    updateScoreboard();
+  };
+
+  const restartRound = () => {
+    gc.resetRound();
+    resetBoardUI();
+  };
+
+  const quitGame = () => {
+    gc.resetGame();
+    gc.resetPlayerScores();
+    gc.resetRoundCount();
+    resetBoardUI();
+    removeResult();
+    resetPlayerFields();
+    showMainMenu();
+  };
+
+  const showResult = (text) => {
+    resultMsg.textContent = text;
+    resultDialog.style.display = "flex";
   };
 
   const handleCellClick = (event, token) => {
@@ -156,15 +251,22 @@ const gameController = (() => {
     }
 
     if (gc.checkWin(gc.board.getState())) {
-      console.log(`${gc.getCurrentPlayer().getName()} wins`);
+      showResult(`${gc.getCurrentPlayer().getName()} wins`);
+      gc.getCurrentPlayer().incrScore();
+      gc.incrRoundCount();
+      console.log(gc.p1.getScore(), gc.p2.getScore());
     } else if (gc.checkGameOver(gc.board.getState())) {
-      console.log("it's a tie");
+      showResult("it's a tie");
+      gc.incrRoundCount();
     } else if (isMoveValid) {
       gc.setCurrentPlayer(gc.getCurrentPlayer() === gc.p1 ? gc.p2 : gc.p1);
     }
   };
 
   startButton.addEventListener("click", startGame);
+  quitGameButton.addEventListener("click", quitGame);
+  nextRoundButton.addEventListener("click", startNextRound);
+  restartRoundButton.addEventListener("click", restartRound);
 
   for (const cell of boardUIArray) {
     cell.addEventListener("click", (event) =>
