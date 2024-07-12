@@ -155,9 +155,10 @@ const gameController = (() => {
   const boardUI = document.querySelector(".board-container");
   const resultDialog = document.querySelector(".result-dialog");
   const resultMsg = document.querySelector(".result-text");
-  const quitGameButton = document.querySelector(".quit-button");
+  const quitButton = document.querySelector(".quit-button");
   const nextRoundButton = document.querySelector(".next-round-button");
   const restartRoundButton = document.querySelector(".restart-round-button");
+  const quitGameButton = document.querySelector(".quit-game-button");
   const p1Score = document.querySelector(".p1-scoreboard span:nth-child(2)");
   const p2Score = document.querySelector(".p2-scoreboard span:nth-child(2)");
   const p1Name = document.querySelector(".p1-scoreboard span:first-child");
@@ -264,9 +265,10 @@ const gameController = (() => {
   };
 
   startButton.addEventListener("click", startGame);
-  quitGameButton.addEventListener("click", quitGame);
+  quitButton.addEventListener("click", quitGame);
   nextRoundButton.addEventListener("click", startNextRound);
   restartRoundButton.addEventListener("click", restartRound);
+  quitGameButton.addEventListener("click", quitGame);
 
   for (const cell of boardUIArray) {
     cell.addEventListener("click", (event) =>
