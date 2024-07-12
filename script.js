@@ -70,7 +70,7 @@ const gameController = (() => {
       [2, 5, 8],
     ];
 
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < 8; i++) {
       const a = boardState[winState[i][0]];
       const b = boardState[winState[i][1]];
       const c = boardState[winState[i][2]];
