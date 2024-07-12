@@ -236,6 +236,10 @@ const gameController = (() => {
     resultDialog.style.display = "flex";
   };
 
+  const startGameOnEnterKeypress = (event) => {
+    if (event.code.toLowerCase() === "enter") startGame();
+  };
+
   const handleCellClick = (event, token) => {
     const cell = Number.parseInt(event.target.id);
     const isMoveValid =
@@ -269,6 +273,8 @@ const gameController = (() => {
   nextRoundButton.addEventListener("click", startNextRound);
   restartRoundButton.addEventListener("click", restartRound);
   quitGameButton.addEventListener("click", quitGame);
+  p1Field.addEventListener("keydown", startGameOnEnterKeypress);
+  p2Field.addEventListener("keydown", startGameOnEnterKeypress);
 
   for (const cell of boardUIArray) {
     cell.addEventListener("click", (event) =>
