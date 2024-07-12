@@ -42,6 +42,13 @@ h1 {
     cursor: pointer;
 }
 
+.board-container > div:active,
+.welcome-overlay button:active,
+button:active {
+    transform: translate(8px, 8px);
+    box-shadow: none;
+}
+
 .game-info {
     font-size: min(5vw, 3.2rem);
     display: flex;
