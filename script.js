@@ -51,7 +51,7 @@ function createBoard() {
   return { fillCell, getState, resetState, showBoard };
 }
 
-const gameController = (() => {
+(function gameController() {
   const board = createBoard();
   const p1 = createPlayer("x");
   const p2 = createPlayer("o");
@@ -106,7 +106,6 @@ const gameController = (() => {
     roundCount = 1;
   };
 
-  // TODO: remember to add something for the individual scores and the round count
   const resetGame = () => {
     currentPlayer = null;
     board.resetState();
@@ -141,10 +140,6 @@ const gameController = (() => {
     resetPlayerScores,
   };
 })();
-
-// TODO: Add reset logic to go back to the main menu
-// TODO: Add a message that pops up every round
-// TODO: Stop user from starting if both name fields are not filled
 
 (function displayController() {
   const gc = gameController;
@@ -197,9 +192,6 @@ const gameController = (() => {
     p1Field.value = "";
     p2Field.value = "";
   };
-
-  // create functions to show the main menu, remove the result overlay, reset the player names
-  // create a function to keep scores and create a function to reset the scores
 
   const showMainMenu = () => {
     mainMenu.style.display = "flex";
