@@ -51,7 +51,7 @@ function createBoard() {
   return { fillCell, getState, resetState, showBoard };
 }
 
-(function gameController() {
+const gameController = (() => {
   const board = createBoard();
   const p1 = createPlayer("x");
   const p2 = createPlayer("o");
@@ -229,7 +229,9 @@ function createBoard() {
   };
 
   const startGameOnEnterKeypress = (event) => {
-    if (event.code.toLowerCase() === "enter") startGame();
+    if (event.code) {
+      if (event.code.toLowerCase() === "enter") startGame();
+    }
   };
 
   const handleCellClick = (event, token) => {
